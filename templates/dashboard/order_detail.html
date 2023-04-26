@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="text-center">
+    <h1>Order Details</h1>
+</div>
+<a href="{% url 'dashboard:orders' %}">Go Back</a>
+<br>
+<div class="card mx-auto" style="max-width: 600px; margin-top:20px;">
+    <h5 class="card-header">{{ order.user }}</h5>
+    <div class="card-body">
+        <h5 class="card-title"> {{ order.order_number }} </h5>
+        <p class="card-title">Payment Method -{{ order.payment.payment_method }} </p>
+        <p class="card-title">Payment Status -{{ order.payment.status }}</p>
+        <b><p >Address - {{ order.address.first_name }} {{ order.address.last_name }}<br>{{ order.address.address_line_1 }} {{ order.address.address_line_2 }} <br> {{ order.address.city }} {{ order.address.state }} 
+        <br>Email - {{ order.address.email }} <br> Phone - {{ order.address.phone }} </p></b>
+        <b><p>Bill Total - {{ order.order_total}} </p></b>
+        <b><p>Order Status - {{ order.status }}</p></b>
+        <b><p>Products</p></b>
+        <table class="table table-borderless table-shopping-cart">
+            <thead class="text">
+            <tr class="card-title text-uppercase">
+              <b><th scope="col">Product</th></b>
+              <b><th scope="col" width="120">Quantity</th></b>
+              <b><th scope="col" width="120">Price</th></b>
+            </tr>
+            </thead>
+            <tbody>
+           
+            {% for product in order_products %}
+                <tr>
+                    <td>
+                        <figure class="itemside align-items-center d-inline">
+                            <div class="aside d-inline"><img src="{{ product.variant.product.image.url }}" class="img-thumbnail rounded float-left" style="width: 50px; height: auto;"></div>
+                            <figcaption class="info d-inline">
+                                <a href="" class="title text-dark">{{ product.variant.product.name }}</a>
+                                <p class="small">{{ product.variant.size }}<br> {{ product.variant.product.category }}</p>
+                            </figcaption>
+                        </figure>
+                    </td>
+                    <td> 
+                        <!-- col.// -->
+                        <div class="col d-inline"> 
+                            <div class="input-group input-spinner d-inline-flex">
+                                <p class="small"> {{ product.quantity }} </p>
+                            </div> <!-- input-group.// -->
+                        </div> <!-- col.// -->
+                    </td>
+                    <td> 
+                        <div class="price-wrap d-inline"> 
+                            <var class="price">₹{{ product.product_price }}</var> 
+                        </div> <!-- price-wrap .// -->
+                    </td>
+            {% endfor %}
+            </tbody>
+            </table>
+        <a href="{% url 'dashboard:order_update' order.order_number %}" class="btn waves-effect waves-light btn-info hidden-md-down text-white">Edit</a>
+    </div>
+</div>
+
+{% endblock %}

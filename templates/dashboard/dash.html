@@ -1,0 +1,173 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.2.1/chart.js" integrity="sha512-Cv3WnEz5uGwmTnA48999hgbYV1ImGjsDWyYQakowKw+skDXEYYSU+rlm9tTflyXc8DbbKamcLFF80Cf89f+vOQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            <!-- Container fluid  -->
+            <!-- ============================================================== -->
+            <div class="container-fluid">
+                <!-- ============================================================== -->
+                <!-- Bread crumb and right sidebar toggle -->
+                <!-- ============================================================== -->
+                <div class="row page-titles">
+                    <div class="col-md-5 align-self-center">
+                        <h3 class="text-themecolor">Dashboard</h3>
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="{% url 'dashboard:dash' %}">Home</a></li>
+                            <li class="breadcrumb-item active">Dashboard</li>
+                        </ol>
+                    </div>
+                    
+                </div>
+                <!-- ============================================================== -->
+                <!-- End Bread crumb and right sidebar toggle -->
+                <!-- ============================================================== -->
+                <!-- ============================================================== -->
+                <!-- Sales Chart and browser state-->
+                <!-- ============================================================== -->
+                <div class="row">
+                    <!-- Column -->
+                    <div class="col-lg-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="d-flex no-block">
+                                    <div>
+                                        <h5 class="card-title mb-0">Sales Chart</h5>
+                                    </div>
+                                    <div class="ms-auto">
+                                        <!-- <ul class="list-inline text-center font-12">
+                                            <li><i class="fa fa-circle text-success"></i> SITE A</li>
+                                            <li><i class="fa fa-circle text-info"></i> SITE B</li>
+                                            <li><i class="fa fa-circle text-primary"></i> SITE C</li>
+                                        </ul> -->
+                                    </div>
+                                </div>
+                                <div class="" style="height: 355px;">
+                                    <div>
+                                        <canvas id="myChart"></canvas>
+                                      </div>
+                                      
+                                      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+                                      
+                                      <script>
+                                        const ctx = document.getElementById('myChart');
+                                    
+                                        new Chart(ctx, {
+                                          type: 'pie',
+                                          data: {
+                                            labels: [{% for status_count in status_counts %} '{{ status_count.status }}', {% endfor %}],
+                                            datasets: [{
+                                              label: '# of Orders by Status',
+                                              data: [{% for status_count in status_counts %} {{ status_count.status_count }}, {% endfor %}],
+                                              backgroundColor: [
+                                                'rgba(255, 99, 132, 0.2)',
+                                                'rgba(54, 162, 235, 0.2)',
+                                                'rgba(255, 206, 86, 0.2)',
+                                                'rgba(75, 192, 192, 0.2)',
+                                                'rgba(153, 102, 255, 0.2)',
+                                                'rgba(255, 159, 64, 0.2)'
+                                              ],
+                                              hoverBackgroundColor: [
+                                                'rgba(255,99,132,0.4)',
+                                                'rgba(54, 162, 235, 0.4)',
+                                                'rgba(255, 206, 86, 0.4)',
+                                                'rgba(75, 192, 192, 0.4)',
+                                                'rgba(153, 102, 255, 0.4)',
+                                                'rgba(255, 159, 64, 0.4)'
+                                              ],
+                                              borderWidth: 1
+                                            }]
+                                          },
+                                          options: {
+                                            responsive: true,
+                                            maintainAspectRatio: false,
+                                            plugins: {
+                                              legend: {
+                                                position: 'top',
+                                              },
+                                              title: {
+                                                display: true,
+                                                text: '# of Orders by Status'
+                                              }
+                                            }
+                                          }
+                                        });
+                                      </script>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <!-- Column -->
+                    <div class="col-lg-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="d-flex mb-4 no-block">
+                                    <h5 class="card-title mb-0 align-self-center">Products</h5>
+                                    <!-- <div class="ms-auto">
+                                        <select class="form-select b-0">
+                                            <option selected="">Today</option>
+                                            <option value="1">Tomorrow</option>
+                                        </select>
+                                    </div> -->
+                                </div>
+                                <div style="height: 355px;">
+                                    <div>
+                                        <canvas id="myChart1"></canvas>
+                                    </div>
+                                      
+                                      <script>
+                                        const ctx1 = document.getElementById('myChart1');
+                                      
+                                        new Chart(ctx1, {
+                                          type: 'bar',
+                                          data: {
+                                            labels: [{% for variant in variants %} '{{ variant.product__name }} {{ variant.size__name }}', {% endfor %}],
+                                            datasets: [{
+                                              label: 'Products by Stock',
+                                              data: [{% for variant in variants %} {{ variant.stock }}, {% endfor %}],
+                                              borderWidth: 1
+                                            }]
+                                          },
+                                          options: {
+                                            scales: {
+                                              y: {
+                                                beginAtZero: true
+                                              }
+                                            }
+                                          }
+                                        });
+                                      </script>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- <ul class="list-inline mt-4 text-center font-12">
+                                    <li><i class="fa fa-circle text-purple"></i> Tablet</li>
+                                    <li><i class="fa fa-circle text-success"></i> Desktops</li>
+                                    <li><i class="fa fa-circle text-info"></i> Mobile</li>
+                                </ul> -->
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                              <a class="btn waves-effect waves-light btn-info hidden-md-down text-white" href="{% url 'dashboard:sale_pdf' %}">Download Report Pdf</a>
+                            </div>
+                            <div class="col">
+                              <a class="btn waves-effect waves-light btn-info hidden-md-down text-white" href="{% url 'dashboard:sale_csv' %}">Download Report Csv</a>
+                            </div>
+                            
+
+                            
+                        </div>
+                    </div>
+                </div>
+                
+               
+
+            </div>
+            </div>
+            <!-- ============================================================== -->
+            <!-- End Container fluid  -->
+            <!-- ============================================================== -->
+            <!-- ============================================================== -->
+            <!-- footer -->
+{% endblock %}

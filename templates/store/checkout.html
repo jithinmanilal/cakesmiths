@@ -1,0 +1,141 @@
+{% extends "main.html" %}
+{% load static %}
+
+{% block content %}
+
+<br>
+<section class="section-content padding-y bg">
+    <div class="container">
+    
+    <!-- ============================ COMPONENT 1 ================================= -->
+    <div class="text-center">
+        <h3 class="card-title mb-4">Order Confirmation</h3>
+    </div>
+    <a href="{% url 'store:cart' %}">Back to Cart</a>
+    <div class="row">
+        <aside class="col-lg-6">
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title mb-4">Billing Address</h5>
+            <form action="{% url 'orders:place_order' %}" method="POST">
+                {% csrf_token %}
+                    <div class="row">
+                        <h5 class="card-title">Select Address</h5>
+                        <div class="item-option-select">
+                            <div class="btn-group btn-group-sm btn-group-toggle" data-toggle="buttons">
+                                {% for address in addresses %}
+                                <div class="card m-2" style="width: 10rem;">
+                                    <div class="card-header">
+                                        <div class="input">
+                                            <input type="radio" name="billing_address" value="{{ address.id }}" required>
+                                        </div>
+                                        {{ address.first_name }} {{ address.last_name }}
+                                    </div>
+                                    <div class="card-body">
+                                        <p class="card-text">{{ address.phone }}</p>
+                                        <p class="card-text">{{ address.address_line_1 }}</p>
+                                        <p class="card-text">{{ address.city }}</p>
+                                        <p class="card-text">{{ address.state }}</p>
+                                        <p class="card-text">{{ address.pin }}</p>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+            <a href="{% url 'orders:add_address' %}">Add an Address</a>            
+        </div>
+    </div> <!-- card.// -->
+    
+        </aside> <!-- col.// -->
+        <aside class="col-lg-6">
+          
+            <div class="card">
+            <div class="card-body">
+                <table class="table table-borderless table-shopping-cart">
+                    <thead class="text-muted">
+                    <tr class="small text-uppercase">
+                      <th scope="col">Product</th>
+                      <th scope="col" width="120">Quantity</th>
+                      <th scope="col" width="120">Price</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                   
+                    {% for cart_item in cart_items %}
+                        <tr>
+                            <td>
+                                <figure class="itemside align-items-center d-inline">
+                                    <div class="aside d-inline"><img src="{{ cart_item.product.image.url }}" class="img-thumbnail rounded float-left" style="width: 50px; height: auto;"></div>
+                                    <figcaption class="info d-inline">
+                                        <a href="{{ 'cart_item.product.get_url' }}" class="title text-dark">{{ cart_item.product.name }}</a>
+                                        <p class="text-muted small">{{ cart_item.variant.size }}<br> {{ cart_item.product.category }}</p>
+                                    </figcaption>
+                                </figure>
+                            </td>
+                            <td> 
+                                <!-- col.// -->
+                                <div class="col d-inline"> 
+                                    <div class="input-group input-spinner d-inline-flex">
+                                    <input type="text" class="form-control"  value="{{ cart_item.quantity }}">
+                                    </div> <!-- input-group.// -->
+                                </div> <!-- col.// -->
+                            </td>
+                            <td> 
+                                <div class="price-wrap d-inline"> 
+                                    <var class="price">₹{{ cart_item.sub_total }}</var> 
+                                    <small class="text-muted"> ₹{{ cart_item.variant.price }} each </small> 
+                                </div> <!-- price-wrap .// -->
+                            </td>
+                    {% endfor %}
+                    </tbody>
+                    </table>
+                    <div class="card">
+                        <div class="card-body">
+                            {% if discount %}
+                            <dl class="dlist-align">
+                                <dt>Sub-Total:</dt>
+                                <dd class="text-right">₹{{ sub_total }}</dd>
+                            </dl>
+                            <dl class="dlist-align">
+                                <dt>Discount:</dt>
+                                <dd class="text-right">₹{{ discount }}</dd>
+                                <dd class="text-right">"{{ coupon.code }}" coupon ({{ coupon.discount }}% off)</dd>
+                            </dl>
+                            {% else %}
+                            {% endif %}
+                            <dl class="dlist-align">
+                                <dt>Total price:</dt>
+                                <dd class="text-right">₹{{ total }}</dd>
+                            </dl>
+                            <dl class="dlist-align">
+                                <dt>Tax:</dt>
+                                <dd class="text-right">₹{{ gst }}</dd>
+                            </dl>
+                            <dl class="dlist-align">
+                                <dt>Shipping:</dt>
+                                <dd class="text-right">₹{{ shipping }}</dd>
+                            </dl>
+                            <dl class="dlist-align">
+                                <dt>Grand-Total:</dt>
+                                <dd class="text-right text-dark b"><strong>₹{{ grand_total }}</strong></dd>
+                            </dl>
+                        </div> <!-- card-body.// -->
+                    </div> <!-- card.// -->  
+    
+                <button name="submit" class="btn btn-primary btn-block" type="submit">Place Order</button>
+                <a href="{% url 'store:category' %}" class="btn btn-light btn-block">Continue Shopping</a>
+            </div> <!-- card-body.// -->
+            </div> <!-- card.// -->    
+        </form>
+    </aside> <!-- col.// -->
+    
+    
+    </div> <!-- row.// -->
+    <!-- ============================ COMPONENT 1 END .// ================================= -->
+    
+    </div> <!-- container .//  -->
+    </section>
+    <!-- ========================= SECTION CONTENT END// ========================= -->
+<br>
+{% endblock %}

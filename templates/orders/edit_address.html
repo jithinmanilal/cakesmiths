@@ -1,0 +1,67 @@
+{% extends "main.html" %}
+
+{% block content %}
+<h2 class="text-center mt-2">Update Address</h2>
+<a class="m-3" href="{% url 'orders:address' %}"><i class="bi bi-arrow-left-square"></i> Go Back</a>
+<br>
+<br>
+<form action="" method="post">
+    <div class="card mx-auto p-3 mb-3" style="width: 30rem;">
+        {% csrf_token %}
+        <div class="row mb-1">
+            <div class="col">
+                <label class="col-form-label" for="first_name">{{ form.first_name.label }}</label>
+                {{ form.first_name }}
+            </div>
+            <div class="col">
+                <label class="col-form-label" for="last_name">{{ form.last_name.label }}</label>
+                {{ form.last_name }}
+            </div>
+        </div>
+        <div class="row mb-1">
+            <div class="col">
+                <label class="col-form-label" for="email">{{ form.email.label }}</label>
+                {{ form.email }}
+            </div>
+            <div class="col">
+                <label class="col-form-label" for="phone">{{ form.phone.label }}</label>
+                {{ form.phone }}
+            </div>
+        </div>
+        <div class="row mb-1">
+            <div class="col">
+                <label class="col-form-label" for="address_line_1">{{ form.address_line_1.label }}</label>
+                {{ form.address_line_1 }}
+            </div>
+            <div class="col">
+                <label class="col-form-label" for="address_line_1">{{ form.address_line_2.label }}</label>
+                {{ form.address_line_2 }}
+            </div>
+        </div>
+        <div class="row mb-1">
+            <div class="col">
+                <label class="col-form-label" for="city">{{ form.city.label }}</label>
+                {{ form.city }}
+            </div>
+            <div class="col">
+                <label class="col-form-label" for="state">{{ form.state.label }}</label>
+                {{ form.state }}
+            </div>
+        </div>
+        <div class="row mb-1">
+            <div class="col">
+                <label class="col-form-label" for="pin_code">{{ form.pin.label }}</label><br>
+                {{ form.pin }}
+            </div>
+        </div><br>
+        <div class="row mb-1">
+            <div class="col">
+                <button type="submit" value="Submit" class="btn btn-primary mx-auto"> Update</button>
+            </div>
+        </div>
+    </div>
+    
+</form>
+
+
+{% endblock %}

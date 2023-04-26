@@ -1,0 +1,56 @@
+{% extends "main.html" %}
+
+{% block content %}
+
+
+<!-- ========================= SECTION CONTENT ========================= -->
+<section class="section-conten padding-y bg">
+
+    <div class="container">
+        <div class="row mt-5">
+            <aside class="col-md-3">
+                <!--   SIDEBAR   -->
+                <ul class="list-group">
+                    <a class="list-group-item" href="{% url 'store:panel' %}"> My order history </a>
+                    <a class="list-group-item" href="{% url 'store:edit_profile' %}"> Edit Profile </a>
+                    <a class="list-group-item" href="{% url 'store:change_password' %}"> Change Password </a>
+                    <a class="list-group-item active" href="{% url 'orders:address' %}" style="background-color: #f16f7e; border-color: #f16f7e;"> My Addresses </a>
+                </ul>
+                <br>
+                <a class="btn btn-light btn-block" href="{% url 'store:logout' %}"> <i class="bi bi-power"></i> <span class="text">Log out</span> </a> 
+                <!--   SIDEBAR .//END   -->
+            </aside>
+
+            <main class="col-md-9">
+                <div class="row">
+                    <a href="{% url 'orders:add_address' %}" class="btn btn-success">Add Address</a>
+                </div>
+                {% for address in addresses %}
+                    <div class="row">
+                        <div class="card mb-5">
+                            <div class="card-header">
+                            {{ address.first_name }} {{ address.last_name }}
+                            </div>
+                            <div class="card-body">
+                            <p class="card-text">{{ address.phone }}</p>
+                            <p class="card-text">{{ address.address_line_1 }}</p>
+                            <p class="card-text">{{ address.city }}</p>
+                            <p class="card-text">{{ address.state }}</p>
+                            <p class="card-text">{{ address.pin }}</p>
+                            <a href="{% url 'orders:edit_address' address.id %}" class="btn btn-primary">Edit</a>
+                            <a href="{% url 'orders:delete_address' address.id %}" class="btn btn-danger">Delete</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </main>
+        </div> <!-- row.// -->
+    </div>
+    
+    
+</section>
+    <!-- ========================= SECTION CONTENT END// ========================= -->
+    
+    
+
+{% endblock %}

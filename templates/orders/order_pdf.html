@@ -1,0 +1,154 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Sales Report</title>
+    <style type="text/css">
+        @page {
+            size: A4;
+            margin: 1cm;
+        }
+
+        .table {
+            width: 100%;
+            max-width: 100%;
+            margin-bottom: 5px;
+            background-color: #fff;
+        }
+
+        .table th,
+        .table td {
+            padding: 5px;
+            vertical-align: top;
+            border-top: 1px solid #000;
+            text-align: center;
+        }
+
+        .table thead th {
+            vertical-align: bottom;
+            border-bottom: 2px solid #000;
+        }
+
+        .table tbody + tbody {
+            border-top: 2px solid #000;
+        }
+
+        .table .table {
+            background-color: #fff;
+        }
+
+        .list-group {
+            display: block;
+            width: 100%;
+            list-style: none;
+            margin-top: 15px;
+            margin-bottom: 15px;
+        }
+
+        .list-group p {
+            width: 100%;
+            height: 20px;
+            line-height: 20px;
+            list-style: none;
+            font-size: 1.1em;
+        }
+        ul {
+        list-style-type: none;
+        }
+        
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <h3>Invoice Date - {{ today | date:"d/m/Y" }}</h3>
+        </div>
+        <div class="col-lg-6">
+            <!-- col-lg-6 start here -->
+            <center>
+                <ul class="list-unstyled text-right">
+                    <li><strong>CakeSmiths</strong></li>
+                    <li> 23 Avenue, Cochin</li>
+                    <li>sales@cakesmiths.com</li>
+                    <li> +91 876 766 554 </li>
+                </ul>
+            </center>
+        </div>
+        <div class="list-group">
+            <p>Name: {{ request.user.first_name }} {{ request.user.last_name }}</p>
+        </div>
+        <!-- col-lg-6 end here -->
+        <div class="col-lg-6">
+            <!-- col-lg-6 start here -->
+            <div class="invoice-from">
+                <ul class="list-unstyled text-right">
+                    <li><strong>Billed To</strong></li>
+                    <li> {{ order.full_name }} </li>
+                    <li>{{ order.full_address }}</li>
+                    <li> {{ order.address.pin }} </li>
+                </ul>
+            </div>
+            <div class="invoice-details mt25">
+                <div class="well">
+                    <ul class="list-unstyled mb0">
+                        <li><strong>Order</strong> {{ order.order_number }}</li>
+                        <li><strong>Transaction</strong> {{ order.payment.payment_id }} </li>
+                        <li><strong>Order Date:</strong> {{ order.created_at }}</li>
+                    </ul>
+                </div>
+            </div>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Total</th>
+
+            </tr>
+            </thead>
+            <tbody>
+                {% for item in order.order_products.all %}  
+                <tr>
+                    <td> {{ item.variant.product.name }} </td>
+                    <td> {{ item.quantity }} </td>
+                    <td>Rs {{ item.product_price }} </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th colspan="2" class="text-right">Sub Total:</th>
+                    <th class="text-center">Rs {{ subtotal }} </th>
+                </tr>
+                <tr>
+                    <th colspan="2" class="text-right">Discount:</th>
+                    <th class="text-center">Rs{{ order.discount }} </th>
+                </tr>
+                <tr>
+                    <th colspan="2" class="text-right">Total:</th>
+                    <th class="text-center">Rs{{ total }} </th>
+                </tr>
+                <tr>
+                    <th colspan="2" class="text-right">Tax:</th>
+                    <th class="text-center">Rs {{ gst }}</th>
+                </tr>
+                <tr>
+                    <th colspan="2" class="text-right">Shipping:</th>
+                    <th class="text-center">Rs {{ shipping }}</th>
+                </tr>
+                <tr>
+                    <th colspan="2" class="text-right">Grand Total:</th>
+                    <th class="text-center">Rs {{ order.order_total }}</th>
+                </tr>
+            </tfoot>
+        </table>
+        <div class="invoice-footer mt25">
+            <p class="text-center">Thank you for shopping with us!</p>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,199 @@
+{% extends "main.html" %}
+{% load static %}
+
+{% block content %}
+<style>
+    .input-spinner button,
+    .input-spinner a {
+      display: inline-block;
+      vertical-align: middle;
+      margin: 0;
+      padding: 0;
+      width: 30px;
+      height: 30px;
+      text-align: center;
+      line-height: 30px;
+      background-color: #f5f5f5;
+      border: 1px solid #ced4da;
+    }
+  
+    .input-spinner button i,
+    .input-spinner a i {
+      font-size: 1.25rem;
+    }
+  </style>
+
+<br>
+<section class="section-content padding-y bg">
+    <div class="container">
+        <div class="text-center">
+            {% if user.is_authenticated %}
+                <h5 class="card-title mb-4">{{ user.first_name }}'s Cart</h5>
+            {% else %}
+                <h5 class="card-title mb-4">Cart</h5>
+            {% endif %}
+        </div>
+    
+    <!-- ============================ COMPONENT 1 ================================= -->
+    {% if not cart_items %}
+    <h2 class="text-center">Your shopping cart is empty.</h2>
+    <br>
+    <div class="text-center">
+        <a href="{% url 'store:category' %}">Continue Shopping</a>
+    </div>
+    {% else %}
+    <div class="row">
+        <aside class="col-lg-9">
+    <div class="card">
+    <table class="table table-borderless table-shopping-cart">
+    <thead class="text-muted">
+    <tr class="small text-uppercase">
+      <th scope="col">Product</th>
+      <th scope="col" width="120">Quantity</th>
+      <th scope="col" width="120">Price</th>
+      <th scope="col" class="text-right" width="200"> </th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        {% for cart_item in cart_items %}
+            <tr>
+                <td>
+                    <figure class="itemside align-items-center d-inline">
+                        <div class="aside d-inline"><img src="{{ cart_item.product.image.url }}" class="img-thumbnail rounded float-left" style="width: 50px; height: auto;"></div>
+                        <figcaption class="info d-inline">
+                            <a href="{% url 'store:product_detail' %}?category_slug={{ cart_item.product.category.slug }}&product_slug={{ cart_item.product.slug }}" class="title text-dark">{{ cart_item.product.name }}</a>
+                            <p class="text-muted small">{{ cart_item.variant.size }}<br> {{ cart_item.product.category }}</p>
+                        </figcaption>
+                    </figure>
+                </td>
+                <td> 
+                    <!-- col.// -->
+                    <div class="col d-inline">
+                        <div class="input-group input-spinner d-inline-flex">
+                            <div class="input-group-prepend">
+                                <a href="{% url 'store:remove_cart' cart_item.product.id cart_item.id %}" class="btn btn-light" type="button" id="button-minus"><i class="bi bi-dash-circle"></i></a>
+                            </div>
+                        <input type="text" class="form-control" value="{{ cart_item.quantity }}">
+                            <div class="input-group-append">
+                                <form action="{% url 'store:add_cart' cart_item.product.id cart_item.variant.id %}" method="post">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="{{ cart_item.variant.size }}" value="{{ cart_item.variant.id }}">
+                                    <button class="btn btn-light" type="submit" id="button-plus"><i class="bi bi-plus-circle"></i></button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td> 
+                    <div class="price-wrap d-inline"> 
+                        <var class="price">₹{{ cart_item.sub_total }}</var> 
+                        <small class="text-muted"> ₹{{ cart_item.variant.price }} each </small> 
+                    </div> <!-- price-wrap .// -->
+                </td>
+                <td class="text-right d-inline"> 
+                <a href="{% url 'store:remove_cart_item' cart_item.product.id cart_item.id %}" onclick="return confirm('Are you sure you want to delete this item?')" class="btn btn-danger"> <i class="bi bi-x-square"></i></a>
+                </td>  
+        {% endfor %} 
+    </tr>
+    <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td> <a href="{% url 'store:category' %}" class="btn btn-success btn-block m-4">Add Items</a></td>
+    </tr>  
+    </tbody>
+    </table>
+    {% endif %}
+    
+    </div> <!-- card.// -->
+    
+        </aside> <!-- col.// -->
+        <aside class="col-lg-3">
+            {% if cart_items %}
+                {% if coupon %}
+                    <div class="card">
+                        <div class="card-body">
+                            <dl class="dlist-align">
+                                <dt>Sub-Total:</dt>
+                                <dd class="text-right">₹{{ sub_total }}</dd>
+                            </dl>
+                            <dl class="dlist-align">
+                                <dt>Discount:</dt>
+                                <dd class="text-right">₹{{ discount }}</dd>
+                                <dd class="text-right">"{{ coupon.code }}" coupon ({{ coupon.discount }}% off)</dd>
+                                <a href="{% url 'coupon:remove_coupon' %}" style="color: crimson;">Remove coupon.</a>
+                            </dl>
+                            <dl class="dlist-align">
+                                <dt>Total price:</dt>
+                                <dd class="text-right">₹{{ total }}</dd>
+                            </dl>
+                            <dl class="dlist-align">
+                                <dt>Tax:</dt>
+                                <dd class="text-right">₹{{ gst }}</dd>
+                            </dl>
+                            <dl class="dlist-align">
+                                <dt>Shipping:</dt>
+                                <dd class="text-right">₹{{ shipping }}</dd>
+                            </dl>
+                            <dl class="dlist-align">
+                                <dt>Grand-Total:</dt>
+                                <dd class="text-right text-dark b"><strong>₹{{ grand_total }}</strong></dd>
+                            </dl>
+                            <hr>
+                            <p class="text-center mb-3">
+                                <img src="{% static 'store/images/payments.png' %}" height="26">
+                            </p>
+            
+                            <a href="{% url 'store:checkout' %}" class="btn btn-primary btn-block"> Checkout </a>
+                            <a href="{% url 'store:category' %}" class="btn btn-light btn-block">Continue Shopping</a>
+                        </div> <!-- card-body.// -->
+                    </div> <!-- card.// --> 
+                {% else %}
+                    <div class="card">
+                        <div class="card-body">
+                            <dl class="dlist-align">
+                                <dt>Total price:</dt>
+                                <dd class="text-right">₹{{ total }}</dd>
+                            </dl>
+                            <dl class="dlist-align">
+                                <dt>Tax:</dt>
+                                <dd class="text-right">₹{{ gst }}</dd>
+                            </dl>
+                            <dl class="dlist-align">
+                                <dt>Shipping:</dt>
+                                <dd class="text-right">₹{{ shipping }}</dd>
+                            </dl>
+                            <dl class="dlist-align">
+                                <dt>Grand-Total:</dt>
+                                <dd class="text-right text-dark b"><strong>₹{{ grand_total }}</strong></dd>
+                            </dl>
+                            <hr>
+                            <p class="text-center mb-3">
+                                <img src="{% static 'store/images/payments.png' %}" height="26">
+                            </p>
+                            <hr>
+                            <form action="{% url 'coupon:apply_coupon' %}" method="post">
+                                {% csrf_token %}
+                                {{ coupon_form }}
+                                <button class="btn btn-primary btn-block m-1" type="submit">Apply Coupon</button>
+                            </form>
+                            <hr>            
+                            <a href="{% url 'store:checkout' %}" class="btn btn-primary btn-block"> Checkout </a>
+                            <a href="{% url 'store:category' %}" class="btn btn-light btn-block">Continue Shopping</a>
+                        </div> <!-- card-body.// -->
+                    </div> <!-- card.// --> 
+                {% endif %}
+            {% else %} 
+            {% endif %}
+        </aside> <!-- col.// -->
+    
+    
+    </div> <!-- row.// -->
+    <!-- ============================ COMPONENT 1 END .// ================================= -->
+    
+    </div> <!-- container .//  -->
+    </section>
+    <!-- ========================= SECTION CONTENT END// ========================= -->
+<br>
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="row m-4">
+        <br>
+        <h2>Delete Coupon</h2>
+        <a href="{% url 'dashboard:coupons' %}">Go Back</a>
+        <br>
+        <br>
+        <form action="" method="post">
+            {% csrf_token %}
+            <p>Are you sure you want to delete this coupon?<br><br> <b>"{{ coupon }}"</b></p><br>
+            <button type="submit" value="Delete" class="btn waves-effect waves-light btn-info hidden-md-down text-white">Delete</button>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

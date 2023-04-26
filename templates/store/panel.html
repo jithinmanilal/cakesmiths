@@ -1,0 +1,120 @@
+{% extends "main.html" %}
+
+{% block content %}
+
+
+<!-- ========================= SECTION CONTENT ========================= -->
+<section class="section-conten padding-y bg">
+
+    <div class="container">
+        <div class="row mt-5">
+            <aside class="col-md-3">
+                <!--   SIDEBAR   -->
+                <ul class="list-group">
+                    <a class="list-group-item active" href="{% url 'store:panel' %}" style="background-color: #f16f7e; border-color: #f16f7e;"> My order history </a>
+                    <a class="list-group-item" href="{% url 'store:edit_profile' %}"> Edit Profile </a>
+                    <a class="list-group-item" href="{% url 'store:change_password' %}"> Change Password </a>
+                    <a class="list-group-item" href="{% url 'orders:address' %}"> My Addresses </a>
+                </ul>
+                <br>
+                <a class="btn btn-light btn-block" href="{% url 'store:logout' %}"> <i class="bi bi-power"></i> <span class="text">Log out</span> </a> 
+                <!--   SIDEBAR .//END   -->
+            </aside>
+            <main class="col-md-9">
+                {% for order in orders %}
+                <article class="card mb-3">
+                <header class="card-header">
+                    <strong class="d-inline-block mr-3">Order ID: {{ order.order_number }}</strong>
+                    <span>.  Order Date: {{ order.created_at }}</span>
+                </header>
+                <div class="card-body">
+                    <div class="row"> 
+                        <div class="col-md-8">
+                            <h6 class="text" style="font-weight: 600;">
+                                <span style="color: #6610f2;">Order Status:</span> 
+                                {% if order.status == "Submitted" %}
+                                    <span style="color: #0d6efd;">{{ order.status }}</span> 
+                                {% elif order.status == "Confirmed" or order.status == "Shipped" or order.status == "Delivered" %}
+                                    <span style="color: #198754;">{{ order.status }}</span>
+                                {% else %}
+                                    <span style="color: #dc3545;">{{ order.status }}</span>
+                                {% endif %}
+                            </h6>
+                            <h6 class="text" style="font-weight: 600; color: #6610f2;">Delivery to</h6>
+                            <p>{{ order.address.first_name }} {{ order.address.last_name }} <br>  
+                            Phone {{ order.address.phone }} Email: {{ order.address.email }} <br>
+                            {{ order.address.address_line_1 }} {{ order.address.address_line_2 }}<br> 
+                            {{ order.address.city }} {{ order.address.state }} {{ order.address.pin }}
+                            </p>
+                        </div>
+                        <div class="col-md-4">
+                            <h6 class="text" style="font-weight: 600; color: #6610f2;">Payment</h6>
+                            <span class="text-success">
+                                <i class="bi bi-credit-card-2-back-fill"></i>
+                                {{ order.payment.payment_method }}
+                            </span>
+                            <p>Total: ₹{{ order.order_total }} <br>
+                            <!-- Shipping fee:  $56 <br> 
+                            <span class="b">Total:  $456 </span> -->
+                            </p>
+                        </div>
+                    </div> <!-- row.// -->
+                </div> <!-- card-body .// -->
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        {% for product in order.order_products %}
+                        <tr>
+                            <td width="65">
+                                <img src="{{ product.variant.product.image.url }}" class="img-xs border rounded-circle">
+                            </td>
+                            <td> 
+                                <p class="title mb-0">{{ product.variant.product }} </p>
+                                <var class="price text-muted">₹{{ product.variant.price }} </var>
+                            </td>
+                            <td> Quantity <br> {{ product.quantity }}</td>
+                        </tr>
+                        {% endfor %}                  
+                    </table>
+                </div> <!-- table-responsive .end// -->
+                <div class="box col-md-3 offset-md-9">
+                    <a href="{% url 'store:order-deet' order_number=order.order_number %}" class="btn btn-outline-primary mb-3" style="width: fit-content;"> Details </a>
+                    <!-- <a href="#" class="btn btn-outline-primary">Track order</a>  -->
+                </div>
+                </article> <!-- order-group.// --> 
+                {% endfor %}
+                <br>
+                <div class="container">
+                    <div class="row">
+                      <div class="col d-flex justify-content-center">
+                        <div class="pagination">
+                            <span class="step-links">
+                                {% if page_obj.has_previous %}
+                                    <a href="?page=1">&laquo; First -</a>
+                                    <a href="?page={{ page_obj.previous_page_number }}">Previous </a>
+                                {% endif %}
+                        
+                                <span class="current">
+                                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                                </span>
+                        
+                                {% if page_obj.has_next %}
+                                    <a href="?page={{ page_obj.next_page_number }}">Next -</a>
+                                    <a href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a>
+                                {% endif %}
+                            </span>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+                             
+            </main>
+        </div> <!-- row.// -->
+    </div>
+    
+    
+</section>
+    <!-- ========================= SECTION CONTENT END// ========================= -->
+    
+    
+
+{% endblock %}

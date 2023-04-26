@@ -1,0 +1,63 @@
+{% extends "main.html" %}
+
+{% block content %}
+    <div class="page-nav no-margin row">
+        <div class="container">
+            <div class="row">
+                <h2 class="text-start">Products</h2>
+                <ul>
+                    <li> <a href="{% url 'store:home' %}"><i class="bi bi-house-door"></i> Home</a></li>
+                    <li><a href="{% url 'store:category' %}"><i class="bi bi-chevron-double-right pe-2"></i>Menu</a></li>
+                    <li><i class="bi bi-chevron-double-right pe-2"></i>{{ products.0.category.name }}</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    {% if products %}
+        <div class="card-group">
+        {% for product in products %}
+            <div class="col-auto mx-auto">
+                <div class="card m-3 p-15" style="width: 25rem;">
+                    <a href="{% url 'store:product_detail' %}?category_slug={{ product.category.slug }}&product_slug={{ product.slug }}">
+                        <img src="{{ product.image.url }}" class="card-img-top" alt="...">
+                    </a>
+                    <div class="card-body">
+                        <h5 class="card-title">{{ product.name }}</h5>
+                        <p class="card-text">{{ product.summary }}</p>
+                    </div>
+                    <div class="card-footer">
+                        <small class="text-muted"></small>
+                    </div>
+                    <a href="{% url 'store:product_detail' %}?category_slug={{ product.category.slug }}&product_slug={{ product.slug }}" class="btn btn-primary">View</a>
+                </div>
+            </div>
+        {% endfor %}
+        </div>
+    {% else %}
+        <p>No products found.</p>
+    {% endif %}
+    <div class="container">
+        <div class="row">
+          <div class="col d-flex justify-content-center">
+            <div class="pagination">
+                <span class="step-links">
+                    {% if page_obj.has_previous %}
+                        <a href="?page=1">&laquo; First -</a>
+                        <a href="?page={{ page_obj.previous_page_number }}">Previous </a>
+                    {% endif %}
+            
+                    <span class="current">
+                        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                    </span>
+            
+                    {% if page_obj.has_next %}
+                        <a href="?page={{ page_obj.next_page_number }}">Next -</a>
+                        <a href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a>
+                    {% endif %}
+                </span>
+            </div>
+          </div>
+        </div>
+      </div>   
+{% endblock %}
+

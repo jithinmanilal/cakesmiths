@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+<br>
+<a href="{% url 'dashboard:variants' %}">Go Back</a>
+<br><br>
+<a href="{% url 'dashboard:category_add' %}"><i class="fa fa-plus" aria-hidden="true"></i> Add Category</a>
+<br>
+
+<div class="container-fluid">
+    <div class="row mt-3">
+        {% for category in categories %}
+            <div class="col-auto mx-auto">
+                <div class="card mb-3" style="width: 18rem;">
+                    <img src="{{ category.cat_img.url }}" class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ category.name }}</h5>
+                        <p class="card-text">{{ category.description }}</p>
+                    </div>
+                    <div class="card-body">
+                        <a href="{% url 'dashboard:category_update' category.id %}" class="btn waves-effect waves-light btn-info text-white m-2">Update</a>
+                        <a href="{% url 'dashboard:category_delete' category.id %}" class="btn waves-effect waves-light btn-info text-white m-2">Delete</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+</table>
+
+{% endblock %}

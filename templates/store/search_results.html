@@ -1,0 +1,49 @@
+{% extends "main.html" %}
+{% load static %}
+
+{% block content %}
+     <div class="page-nav no-margin row">
+        <div class="container">
+            <div class="row">
+                <h2 class="text-start">Search Results</h2>
+                <ul>
+                    <li> <a href="{% url 'store:home' %}"><i class="bi bi-house-door"></i> Home</a></li>
+                    <li><i class="bi bi-chevron-double-right pe-2"></i> Search</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+          
+            <!-- ******************** About US Starts Here ******************* -->
+
+                    <div class="row">
+                        {% for item in items %}
+                        <div class="box" >
+                            <div class="card mb-3">
+                                <div class="row g-0" style="max-height: fit-content;">
+                                    <div class="col-md 2">
+
+                                    </div>
+                                    <div class="col-md-2">
+                                        <img src="{{ item.image.url }}" style="max-width: 10rem; max-height: 10rem;" class="img-fluid rounded-start" alt="...">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="card-body">
+                                            <h5 class="card-title">{{ item.name }}</h5>
+                                            <p class="card-text">{{ item.summary }}</p><br>
+                                            <p class="card-text"><small class="text-body-secondary">Category: {{ item.category }}</small></p>
+                                            <a class="btn btn-primary mt-2" href="{% url 'store:product_detail' %}?category_slug={{ item.category.slug }}&product_slug={{ item.slug }}">View</a>
+                                        </div>
+                                    </div>
+                                    <div class="col-md 2">
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+            
+    
+{% endblock %}

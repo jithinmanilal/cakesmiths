@@ -1,0 +1,47 @@
+{% extends "main.html" %}
+{% load static %}
+
+{% block content %}
+     <div class="page-nav no-margin row">
+        <div class="container">
+            <div class="row">
+                <h2 class="text-start">About Our Company</h2>
+                <ul>
+                    <li> <a href="{% url 'store:home' %}"><i class="bi bi-house-door"></i> Home</a></li>
+                    <li><i class="bi bi-chevron-double-right pe-2"></i> About Us</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+          
+            <!-- ******************** About US Starts Here ******************* -->
+
+    <div class="about-us big-padding">
+        <div class="container-lg">
+          
+            <div class="about-row row">
+                <div class="col-md-7">
+                    <div class="abut-detail fs-6">
+                         
+                        <p class="mb-3">At Cakesmiths, our passion for baking is more than just a job or a business. It is a deep-rooted love for the art of creating delectable and exquisite cakes and pastries that delight the taste buds and bring joy to people's lives. We take pride in our dedication to the craft of baking, and it is evident in every aspect of our business, from the selection of the finest ingredients to the intricate detailing of each cake.
+
+                            Our journey began with a simple dream – to create cakes that taste as good as they look. We believe that baking is an art form that requires skill, creativity, and patience. We understand that every cake we create is a representation of our commitment to excellence, and we strive to exceed our customers' expectations with each creation.</p>
+                         <p class="mb-3"> At Cakesmiths, we take the craft of baking seriously. We use only the finest ingredients, sourced from local and international suppliers who share our commitment to quality. Our team of bakers and pastry chefs are highly skilled and passionate about their work, ensuring that each cake is made with the utmost care and attention to detail.
+
+                            From classic flavors like vanilla and chocolate to more exotic options like matcha and black sesame, we offer a wide range of cakes and pastries to suit every taste and occasion. We believe that every cake should be a work of art, and we take great pride in creating unique and visually stunning designs that are as beautiful as they are delicious.</p>
+                          <p class="mb-4">Our dedication to the craft of baking extends beyond just the taste and appearance of our cakes. We are committed to using sustainable and ethical practices in all aspects of our business, from sourcing ingredients to reducing our environmental footprint. We believe that baking should not only be a joy for those who indulge in our creations, but also for the planet we call home.
+
+                            We are constantly pushing ourselves to innovate and create new flavors and designs that are both delicious and visually striking. Whether you are looking for a simple birthday cake or an elaborate wedding cake, our team of bakers and pastry chefs will work with you to create a custom creation that is truly unforgettable.</p>
+                    </div>
+                   
+
+                    
+                </div>
+                <div class="col-md-5">
+                    <img src="{% static 'store/images/h2.png' %}"  alt="">
+                </div>
+            </div>
+        </div>
+    </div>           
+    
+{% endblock %}

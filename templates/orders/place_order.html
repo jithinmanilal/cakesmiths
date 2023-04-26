@@ -1,0 +1,186 @@
+{% extends "main.html" %}
+{% load static %}
+
+{% block content %}
+
+<br>
+<section class="section-content padding-y bg">
+    <div class="container">
+    <form action="{% url 'orders:payment' %}" method="post">
+      {% csrf_token %}
+    <!-- ============================ COMPONENT 1 ================================= -->
+    <input type="hidden" name="order_no" value="{{ order.order_number }}">
+    <h4 class="text-center mb-10"> Review order and make payment.</h4>
+    <div class="row">
+        <aside class="col-lg-8">
+            <div class="card">
+                <div class="card-header">
+                  Billing Address
+                </div>
+                <div class="card-body">
+                 
+                  <p class="card-text mb-0" id="fname">{{ order.full_name }}</p>
+                  <p class="card-text mb-0" id="faddress">{{ order.full_address }}</p>
+                  <p class="card-text mb-0">{{ order.address.city }} {{ order.address.state }}</p>
+                  <p class="card-text mb-0" id="email">{{ order.address.email }}</p>
+                  <p class="card-text" id="phone">{{ order.address.phone }}</p>                  
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                  Review Products
+                </div>
+                <div class="card-body">
+                    <table class="table table-borderless table-shopping-cart">
+                        <thead class="text-muted">
+                        <tr class="small text-uppercase">
+                          <th scope="col">Product</th>
+                          <th scope="col" width="120">Quantity</th>
+                          <th scope="col" width="120">Price</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                       
+                        {% for cart_item in cart_items %}
+                            <tr>
+                                <td>
+                                    <figure class="itemside align-items-center d-inline">
+                                        <div class="aside d-inline"><img src="{{ cart_item.product.image.url }}" class="img-thumbnail rounded float-left" style="width: 50px; height: auto;"></div>
+                                        <figcaption class="info d-inline">
+                                            <a href="{{ 'cart_item.product.get_url' }}" class="title text-dark">{{ cart_item.product.name }}</a>
+                                            <p class="text-muted small">{{ cart_item.variant.size }}<br> {{ cart_item.product.category }}</p>
+                                        </figcaption>
+                                    </figure>
+                                </td>
+                                <td> 
+                                    <!-- col.// -->
+                                    <div class="col d-inline"> 
+                                        <div class="input-group input-spinner d-inline-flex">
+                                        <input type="text" class="form-control"  value="{{ cart_item.quantity }}">
+                                        </div> <!-- input-group.// -->
+                                    </div> <!-- col.// -->
+                                </td>
+                                <td> 
+                                    <div class="price-wrap d-inline"> 
+                                        <var class="price">₹{{ cart_item.sub_total }}</var> 
+                                        <small class="text-muted"> ₹{{ cart_item.variant.price }} each </small> 
+                                    </div> <!-- price-wrap .// -->
+                                </td>
+                        {% endfor %}
+                        </tbody>
+                        </table>
+                  <p class="card-text">  </p>
+                </div>
+            </div>
+    
+        </aside> <!-- col.// -->
+        <aside class="col-lg-4">
+            <div class="card">
+                <div class="card-body">
+                        <div class="card">
+                            <div class="card-body">
+                                {% if order.discount %}
+                                <dl class="dlist-align">
+                                    <dt>Sub-Total:</dt>
+                                    <dd class="text-right">₹{{ sub_total }}</dd>
+                                </dl>
+                                <dl class="dlist-align">
+                                    <dt>Discount:</dt>
+                                    <dd class="text-right">₹{{ order.discount }}</dd>
+                                    <dd class="text-right">"{{ order.coupon.code }}" coupon applied.</dd>
+                                </dl>
+                                {% else %}
+                                {% endif %}
+                                <dl class="dlist-align">
+                                  <dt>Total price:</dt>
+                                  <dd class="text-right">₹{{ total }}</dd>
+                                </dl>
+                                <dl class="dlist-align">
+                                  <dt>GST:</dt>
+                                  <dd class="text-right">₹{{ gst }}</dd>
+                                </dl>
+                                <dl class="dlist-align">
+                                    <dt>Shipping:</dt>
+                                    <dd class="text-right">₹{{ shipping }}</dd>
+                                </dl>
+                                <hr>
+                                <dl class="dlist-align">
+                                  <dt>Grand-Total:</dt>
+                                  <dd class="text-right text-dark b" id="grand_total" data-grand-total="{{ grand_total }}"><strong>₹{{ grand_total }}</strong></dd>
+                                </dl>
+                                
+                                
+                            </div> <!-- card-body.// -->
+                            </div> <!-- card.// -->    
+        
+                    <button name="submit" class="btn btn-primary btn-block mb-1" type="submit">COD | Place Order</button>
+                    <br>
+                    <button class="btn btn-success razorpay btn-block" id="rzpbutton" type="button">Pay with RazorPay</button>
+                </div> <!-- card-body.// -->
+                </div> <!-- card.// -->    
+            </form>
+        </aside> <!-- col.// -->
+    
+    
+    </div> <!-- row.// -->
+    <!-- ============================ COMPONENT 1 END .// ================================= -->
+    
+    </div> <!-- container .//  -->
+    </section>
+    <!-- ========================= SECTION CONTENT END// ========================= -->
+<br>
+{% endblock content %}
+{% block scripts %}
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <script>
+    var fname = $("#fname").text();
+    var email = $("#email").text();
+    var phone = $("#phone").text();
+    var token = $("[name='csrfmiddlewaretoken']").val();
+    var oid = $("[name='order_no']").val();
+    var grandTotal = $('#grand_total').data('grand-total');
+    var options = {
+        "key": "rzp_test_fgZ1PQfYWRTKtv", // Enter the Key ID generated from the Dashboard
+        "amount": 1*100, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+        "currency": "INR",
+        "name": "CakeSmiths", //your business name
+        "description": "Thankyou",
+        "image": "https://example.com/your_logo",
+        "handler": function (response){
+            $.ajax({
+            method: "POST",
+            url: "/orders/payment/",
+            data: {
+                "payment_method": "Razorpay",
+                "amount_paid": grandTotal,
+                "payment_id" : response.razorpay_payment_id,
+                "order_no" : oid,
+                "status" : "Completed",
+                csrfmiddlewaretoken: token
+            },
+            success: function (response) {
+                console.log(oid)
+                window.location.href = `/orders/order_completed/?order_number=${oid}`
+            }
+        });
+        },
+        "prefill": {
+            "name": fname, //your customer's name
+            "email": email,
+            "contact": phone
+        },
+        "theme": {
+            "color": "#3399cc"
+        }
+};
+var rzp1 = new Razorpay(options);
+rzp1.on('payment.failed', function (response){
+        
+});
+document.getElementById('rzpbutton').onclick = function(e){
+    rzp1.open();
+    e.preventDefault();
+}
+  </script>
+{% endblock scripts %}

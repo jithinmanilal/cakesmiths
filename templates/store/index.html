@@ -1,0 +1,182 @@
+{% extends "main.html" %}
+{% load static %}
+
+{% block content %}
+            
+            <!-- ##################### Slider Starts Here #################### -->
+            
+            <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="true">
+              <div class="carousel-indicators">
+                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+              </div>
+              <div class="carousel-inner">
+                <div class="carousel-item active">
+                  <img src="{% static 'store/images/slider/s1.jpg' %}" class="d-block w-100" alt="...">
+                  <div class="carousel-caption   d-md-block">
+                      <div class="row">
+                           <div class="col-lg-6 text-start ">
+                              <h1 class="fs-12 fw-bolder text-start ">Cupcakes <br><span class="text-primary">shop online</span> </h1> 
+                              <p class="text-dark d-none d-md-block text-start">Our cupcakes are absolutely heavenly treats that you won't be able to resist sinking your teeth into. Baked fresh every day, these little cakes are soft, fluffy and incredibly delicious.With beautifully crafted designs and decorations on top, they make for gorgeous gifts or delightful desserts at any event. </p>
+                              <div class="d-inline-block pt-5 text-start d-none d-lg-block">
+                                  <a href="{% url 'store:about' %}" class="btn btn-primary shadow fs-5 fw-bolder px-5 py-2">See More</a>
+                                  <a href="{% url 'store:category' %}" class="btn btn-outline-primary ms-4 shadow fs-5 fw-bolder px-5 py-2">Buy Now</a>
+                              </div>
+                           </div>
+                           <div class="col-lg-6 d-none d-lg-block">
+                               <img class="w-100" src="{% static 'store/images/h2.png' %}" alt="">
+                           </div>
+                      </div>
+                  </div>
+                </div>
+                <div class="carousel-item">
+                  <img src="{% static 'store/images/slider/s2.jpg' %}" class="d-block w-100" alt="...">
+                  <div class="carousel-caption  d-md-block">
+                      <div class="row">
+                           <div class="col-lg-6">
+                              <h1 class="fs-12 fw-bolder text-start">Chocolate cakes <br><span class="text-primary">shop online</span> </h1> 
+                              <p class="d-none d-md-block text-dark text-start">Our chocolate cakes are perfect for any occasion, be it a birthday celebration or just an indulgent treat for yourself. Served with whipped cream, fresh berries or a scoop of ice-cream, they are the ultimate comfort food that will satisfy your sweet tooth cravings instantly.</p>
+                              <div class="d-inline-block pt-5 text-start d-none d-lg-block">
+                                  <a href="{% url 'store:about' %}" class="btn btn-primary shadow fs-5 fw-bolder px-5 py-2">See More</a>
+                                  <a href="{% url 'store:category' %}" class="btn btn-outline-primary ms-4 shadow fs-5 fw-bolder px-5 py-2">Buy Now</a>
+                              </div>
+                           </div>
+                           <div class="col-lg-6 d-none d-lg-block">
+                               <img class="w-100" src="{% static 'store/images/h3.png' %}" alt="">
+                           </div>
+                            
+                      </div>
+                  </div>
+                </div>
+              </div>
+              <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"><i class="bi fs-4 text-dark bi-chevron-left"></i></span>
+                <span class="visually-hidden">Previous</span>
+              </button>
+              <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"><i class="bi fs-4 text-dark bi-chevron-right"></i></span>
+                <span class="visually-hidden">Next</span>
+              </button>
+            </div>
+            
+            <!-- ##################### Why Choos US #################### -->
+             <div class="container-fluid products big-padding pt-3">
+               <div class="container-xl">
+                   <div class="section-title row">
+                        <h2 class="fs-1 fw-bold">Why Choose our Cakes?</h2>
+                        <p>Each cake is lovingly crafted with attention to detail and an eye for beauty, making them not just delicious but also visually pleasing. Whether it's for a special occasion or just as an indulgent treat, our cakes are guaranteed to satisfy your sweet tooth craving. So why choose us? Because we prioritize quality over quantity and never compromise on taste or presentation - ensuring each slice of cake is as magnificent as it is decadent.</p>
+                    </div>
+                   <div class="row mt-5">
+                       <div class="col-lg-3 mb-4 col-md-6">
+                           <div class="cover text-center">
+                               <img class="w-125" src="{% static 'store/images/icon/honeycomb.png' %}" alt="">
+                               <h2 class="fs-3 fw-bolder mt-4">Delicious Pastries</h2>
+                               <p>Whether you're in the mood for a flaky croissant, a decadent chocolate eclair, or a delicate fruit tart, we have an array of options to choose from. Our bakers take pride in their craftsmanship and strive to make each pastry as perfect as possible.</p>
+                           </div>
+                       </div>
+                       <div class="col-lg-3 mb-4 col-md-6">
+                           <div class="cover text-center">
+                               <img class="w-125" src="{% static 'store/images/icon/bee.png' %}" alt="">
+                               <h2 class="fs-3 fw-bolder mt-4">Tasty Cupcakes</h2>
+                               <p>Our range of classic cupcakes includes chocolate fudge, vanilla cream, and red velvet - all fluffy and moist with generous buttercream frosting that's not too sweet. For those looking for something more unique, we offer exotic options such as matcha green tea, lavender honey, and chai spice latte cupcakes which are equally mouthwatering.</p>
+                           </div>
+                       </div>
+                       <div class="col-lg-3 mb-4 col-md-6">
+                           <div class="cover text-center">
+                               <img class="w-125" src="{% static 'store/images/icon/honey.png' %}" alt="">
+                               <h2 class="fs-3 fw-bolder mt-4">Luscious Cakes</h2>
+                               <p>Our cakes are not just desserts; they are an experience that brings people together over happy celebrations or intimate moments shared between loved ones. Come try us out and see why our luscious cakes have earned a reputation as the best around!</p>
+                           </div>
+                       </div>
+                       <div class="col-lg-3 mb-4 col-md-6">
+                           <div class="cover text-center">
+                               <img class="w-125" src="{% static 'store/images/icon/fast.png' %}" alt="">
+                               <h2 class="fs-3 fw-bolder mt-4">Fast Delivery </h2>
+                               <p>At our company, we take pride in providing fast and efficient delivery for our customers. We understand that time is of the essence, and we work tirelessly to ensure that your orders are processed and delivered quickly. </p>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+           </div>
+            
+            
+             <!-- ##################### Our Products Starts Here #################### -->
+           <div class="container-fluid products big-padding px-3 bg-honey">
+               <div class="container-xl">
+                   <div class="section-title row">
+                        <h2 class="fs-1 fw-bold">Our Products</h2>
+                        <p>Our cakes are freshly baked every day using only the best ingredients to ensure that each slice is rich in flavor and moist in texture. Whether you prefer a classic vanilla sponge or a more decadent chocolate fudge cake, our range has something for everyone. Our pastries are also a crowd-pleaser with options such as croissants, Danish pastry, and turnovers made with flaky buttery dough that melts in your mouth. And for those who have a sweet tooth or love bite-sized treats, our cupcakes come in different flavors from red velvet to lemon raspberry topped with fluffy buttercream frosting just like grandma used to make!</p>
+                    </div>
+                   <div class="row">
+                    {% for category in categories %}
+                       <div class="col-lg-3 col-md-4 mb-4">
+                           <a href="{{ category.get_url }}">
+                           <div class="product bg-white p-4 text-center shadow-md">
+                               <img src="{{ category.cat_img.url }}" alt="">
+                                <div class="d-inline-block">
+                                   <h4 class="fw-bolder fs-5 mt-4">{{ category.name }}</h4>
+                                   <span class="fw-bolder fs-4"></span> <span class="text-muted text-decoration-line-through"></span>
+                               </div>
+                               <div class="d-inline-block mt-3">
+                                   <a class="btn btn-primary px-5" href="{{ category.get_url }}">Shop Now</a>
+                               </div>
+                               
+                           </div>
+                           </a>
+                       </div>
+                       {% endfor %}
+                   </div>
+                    <div class="row">
+                      <div class="col d-flex justify-content-center">
+                        <div class="pagination">
+                            <span class="step-links">
+                                {% if page_obj.has_previous %}
+                                    <a href="?page=1">&laquo; First -</a>
+                                    <a href="?page={{ page_obj.previous_page_number }}">Previous </a>
+                                {% endif %}
+                        
+                                <span class="current">
+                                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                                </span>
+                        
+                                {% if page_obj.has_next %}
+                                    <a href="?page={{ page_obj.next_page_number }}">Next -</a>
+                                    <a href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a>
+                                {% endif %}
+                            </span>
+                        </div>
+                      </div>
+                    </div>            
+               </div>
+           </div>
+           
+           
+            
+      <!-- ******************** About US Starts Here ******************* -->
+
+    <div class="about-us big-padding">
+        <div class="container-lg">
+            <div class="section-title">
+                <p>Help us to Achieve our Goal</p>
+                <h2>About Our Company</h2>
+            </div>
+            <div class="about-row row">
+                <div class="col-md-7">
+                    <div class="abut-detail fs-6">
+                         
+                        <p class="mb-3">Our Bakery is a quaint little shop tucked away in the heart of our town. It's the kind of place where you'll always feel welcome, and the scent of freshly-baked pastries fills your senses as you walk through the door. From classic croissants to indulgent chocolate cakes. </p>
+                        <p class="mb-3"> Our Bakery offers an extensive range of treats that will satisfy any sweet tooth. What sets this bakery apart, however, is its dedication to quality ingredients and traditional baking methods. Each item is made from scratch with locally sourced flour and butter, ensuring a melt-in-your-mouth experience with every bite.</p>
+                        <p class="mb-4">By spreading the word about our bakery on social media or word of mouth, you're helping us reach a wider audience. Additionally, if there are any special treats or baked goods that you'd like to see added to our menu, don't hesitate to let us know! We absolutely value your feedback and suggestions. Lastly, just by consistently supporting us through your purchases, you're already playing a huge role in helping us succeed. So thank you from the bottom of our hearts for being a part of our bakery family - let's continue to grow and thrive together!</p>
+                    </div>
+                   
+
+                    
+                </div>
+                <div class="col-md-5">
+                    <img src="{% static 'store/images/h1.png' %}" alt="">
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

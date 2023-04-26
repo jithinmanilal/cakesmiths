@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="text-center">
+    <h1>Add Product</h1>
+</div>
+<a href="{% url 'dashboard:products' %}">Go Back</a>
+<br>
+<div class="card mx-auto" style="max-width: 380px; margin-top:100px;">
+    <div class="card-body">
+        <form action="" method="post">
+            {% csrf_token %}
+            {{form.as_p}}
+            <button type="submit" value="Submit" class="btn waves-effect waves-light btn-info hidden-md-down text-white">Add Product</button>
+        </form>
+    </div>
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,90 @@
+{% extends "main.html" %}
+
+{% block content %}
+    <div class="page-nav no-margin row">
+        <div class="container">
+            <div class="row">
+                <h2 class="text-start">Products</h2>
+                <ul>
+                    <li> <a href="{% url 'store:home' %}"><i class="bi bi-house-door"></i>Home</a></li>
+                    <li> <a href="{% url 'store:category' %}"><i class="bi bi-chevron-double-right pe-2"></i>Menu</a></li>
+                    <li> <a href="{{ product.category.get_url }}"><i class="bi bi-chevron-double-right pe-2"></i>{{ product.category.name }}</a></li>
+                    <li><i class="bi bi-chevron-double-right pe-2"></i>{{ product.name }}</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="container">
+        <!-- ============================ COMPONENT 1 ================================= -->
+        <div class="card">
+            <div class="row no-gutters">
+                <aside class="col-md-6">
+                    <article class="gallery-wrap"> 
+                        <div class="img-big-wrap">
+                           <a href="#"><img src="{{ product.image.url }}"></a>
+                        </div> <!-- img-big-wrap.// -->
+                    </article> <!-- gallery-wrap .end// -->
+                </aside>
+                <main class="col-md-6 border-left">
+                    <form action="{% url 'store:add_to_cart' product.id %}" method="post">
+                        {% csrf_token %}                        
+                        <article class="content-body">
+                            <h2 class="title">{{ product.name }}</h2>
+                            {% if variants %}
+                                <div class="mb-3">
+                                    {% for variant in variants %}
+                                        <div class="box border border-secondary-subtle rounded m-3 p-1">
+                                            <h5 >{{ variant.size }} - ₹{{ variant.price }} <a class="btn" style="color:#f16f7e;" href="{% url 'coupon:add_to_wishlist' product_slug=variant.product.slug size_slug=variant.size.slug %}"><i class="bi bi-heart"></i></a></h5>
+                                            <span>Availability:</span> 
+                                            {% if variant.stock > 10 %} 
+                                                <span class="text-success">In Stock</span> 
+                                            {% elif variant.stock > 0 %}
+                                                <span class="text" style="color: #fd7e14;">Limited Stock</span>
+                                            {% else %}
+                                                <span class="text-danger">Out of Stock</span>
+                                            {% endif %}
+                                        </div>
+                                    {% endfor %}
+                                </div> 
+                                <p>{{ product.description }}</p>
+                                <hr>
+                                <br>
+                                <div class="row">
+                                    <div class="item-option-select">
+                                        <h6>Select Size</h6>
+                                        <select name="size" class="form-control" required>
+                                            <option value="" selected>Choose</option>
+                                            {% for variant in variants %}
+                                                {% if 1 > variant.stock %}
+                                                    <option value="{{ variant.size }}" disabled>{{ variant.size }}</option>
+                                                {% else %}
+                                                    <option value="{{ variant.size }}">{{ variant.size }}</option>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </select> 
+                                    </div>
+                                </div> <!-- row.// -->
+                            {% endif %}
+                            <br>
+                            <div class="row">
+                                <div class="col">
+                                    {% if variant.stock <= 0 %}
+                                        <h5>Out of Stock</h5>
+                                    {% else %}
+                                        <Button type="submit" class="btn  btn-primary mb-4"> <span class="text">Add to cart</span> <i class="bi bi-cart"></i> </Button>
+                                    {% endif %}
+                                </div>
+                                <div class="col">
+                                    
+                                </div>
+                            </div>
+                        </article> <!-- product-info-aside .// -->
+                    </form>
+                </main> <!-- col.// -->
+            </div> <!-- row.// -->
+        </div> <!-- card.// -->
+        <br>
+    </div>
+        
+{% endblock %}

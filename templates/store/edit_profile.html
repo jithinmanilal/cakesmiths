@@ -1,0 +1,43 @@
+{% extends "main.html" %}
+
+{% block content %}
+
+<section class="section-conten padding-y bg">
+
+    <div class="container">
+        <div class="row mt-5">
+            <aside class="col-md-3">
+                <!--   SIDEBAR   -->
+                <ul class="list-group">
+                    <a class="list-group-item" href="{% url 'store:panel' %}"> My order history </a>
+                    <a class="list-group-item active" href="{% url 'store:edit_profile' %}" style="background-color: #f16f7e; border-color: #f16f7e;"> Edit Profile </a>
+                    <a class="list-group-item" href="{% url 'store:change_password' %}"> Change Password </a>
+                    <a class="list-group-item" href="{% url 'orders:address' %}"> My Addresses </a>
+                </ul>
+                <br>
+                <a class="btn btn-light btn-block" href="{% url 'store:logout' %}"> <i class="bi bi-power"></i> <span class="text">Log out</span> </a> 
+                <!--   SIDEBAR .//END   -->
+            </aside>
+
+            <main class="col-md-9">
+                <div class="d-flex justify-content-center">
+                    <div class="card mb-5" style="width: 30rem;">
+                        <form action="" method="post">
+                            {% csrf_token %}
+                            {{ form.as_p }}
+                            <button name="submit" class="btn btn-primary btn-block mb-3" type="submit">Update</button>
+                            <br>
+                        </form>
+                    </div>
+                </div>
+                
+            </main>
+        </div> <!-- row.// -->
+    </div>
+    
+    
+</section>
+    <!-- ========================= SECTION CONTENT END// ========================= -->
+
+
+{% endblock %}

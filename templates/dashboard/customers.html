@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row page-titles">
+        <div class="col-md-5 align-self-center">
+            <h3 class="text-themecolor">Dashboard</h3>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'dashboard:dash' %}">Home</a></li>
+                <li class="breadcrumb-item active">CUSTOMERS</li>
+            </ol>
+        </div>
+        
+    </div>
+    <div class="row">
+        <div class="d-flex justify-content-center">
+            <table class="table table-hover">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Last Name</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Phone</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Action</th>
+                </tr>
+                {% for customer in customers %}  
+                    <tr>
+                        <th scope="row">{{ customer.id }}</th>
+                        <td>{{ customer.first_name | title }}</td>
+                        <td>{{ customer.last_name | title }}</td>
+                        <td>{{ customer.email }}</td>
+                        <td>{{ customer.phone }}</td>
+                        <td>{% if customer.is_active %} Active {% else %} Blocked {% endif %}</td>
+                        <td>{% if customer.is_superuser %}
+                            <a type="button" class="btn btn-outline-dark" style="max-height: 25px; padding: 0px 10px; display: flex; align-items: center; justify-content: center;" href="#">
+                                <span style="font-size: 12px;">Admin</span>
+                            {% else %}
+                                {% if customer.is_active %}<a type="button" class="btn btn-outline-danger" style="max-height: 25px; padding: 0px 10px; display: flex; align-items: center; justify-content: center;" href="{% url 'dashboard:customer_status' user_id=customer.id %}">
+                                <span style="font-size: 12px;">Block</span>
+                            </a>{% else %} <a type="button" class="btn btn-outline-success" style="max-height: 25px; padding: 0px 10px; display: flex; align-items: center; justify-content: center;" href="{% url 'dashboard:customer_status' user_id=customer.id %}">
+                                <span style="font-size: 12px;">Allow</span>
+                            </a>{% endif %}
+                            {% endif %}
+                        </td>
+                        
+                    </tr> 
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+</div>        
+{% endblock %}
