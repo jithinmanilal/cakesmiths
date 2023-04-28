@@ -493,5 +493,16 @@ def search(request):
         messages.error(request, "Searched product unavailable.")
         return
 
+def autocomplete(request):
+    try:
+        if 'term' in request.GET:
+            qs = Product.objects.filter(name__icontains=request.GET.get('term'))
+            items = list()
+            for product in qs:
+                items.append(product.name)
+            return JsonResponse(items, safe=False)
+    except ObjectDoesNotExist:
+        pass
+
 def handle_not_found(request, exception):
     return render(request, 'store/not_found.html')

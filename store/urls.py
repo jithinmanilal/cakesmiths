@@ -15,6 +15,7 @@ urlpatterns = [
     path('about/', Aboutview.as_view(), name='about'),
     path('panel/', PanelView.as_view(), name='panel'),
     path('search/', views.search, name='search'),
+    path('autocomplete/', views.autocomplete, name='autocomplete'),
     path('panel/order/<int:order_number>', views.order_detail, name='order-deet'),
     path('panel/cancel_order/<int:order_number>', views.cancel_order, name='cancel-order'),
     path('edit_profile/', UpdateUserView.as_view(), name='edit_profile'),
