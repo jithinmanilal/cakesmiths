@@ -126,6 +126,9 @@ def cancel_order(request, order_number):
 
 @login_required(login_url='store:login')
 def verify_code(request):
+    if request.user.is_verified:
+        messages.error(request,"Cell phone already verified.")
+        return redirect('store:home')
     if request.method == 'POST':
         form = VerifyForm(request.POST)
         if form.is_valid():
@@ -133,7 +136,7 @@ def verify_code(request):
             if verify.check(request.user.phone, code):
                 request.user.is_verified = True
                 request.user.save()
-                messages.success(request,"Your cellphone number has been verified.")
+                messages.success(request,"Your cellphone has been verified.")
                 return redirect('store:home')
     else:
         form = VerifyForm()
