@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse
 from django.views import View
-from django.views.generic import ListView, DetailView, TemplateView
+from django.views.generic import ListView, TemplateView
 from django.contrib.auth.views import PasswordChangeView
 from django.views.generic.edit import UpdateView, FormView
 from django.contrib import messages
@@ -11,7 +11,7 @@ from django.contrib.auth.decorators import user_passes_test, login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404
 from django.core.exceptions import ObjectDoesNotExist
-from django.urls import reverse_lazy, reverse
+from django.urls import reverse_lazy
 
 from dashboard.forms import CustomerRegisterForm, EditUserProfileForm
 from .models import Product, Category, Cart, CartItem, ProductVariant
@@ -22,8 +22,6 @@ from dashboard.verify import send
 from dashboard.forms import VerifyForm, PasswordChangeForm
 from coupon.forms import CouponForm
 from orders.models import Address
-import requests
-from django.core.paginator import Paginator
 # Create your views here.
 
 def verification_required(view_func):
