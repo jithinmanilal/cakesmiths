@@ -7,3 +7,6 @@
 
 # ENV
 .env
+
+# Static
+static

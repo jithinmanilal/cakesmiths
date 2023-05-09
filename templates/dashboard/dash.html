@@ -26,6 +26,14 @@
                 <!-- Sales Chart and browser state-->
                 <!-- ============================================================== -->
                 <div class="row">
+                  <form action="" method="post">
+                    {% csrf_token %}
+                    <p>From:<input type="date" name="fromdate"/>
+                    To:<input type="date" name="todate"/>
+                    <input class="btn btn-info text-white" type="submit" value="Filter"/></p>
+                    <hr>
+                </div>
+                <div class="row">
                     <!-- Column -->
                     <div class="col-lg-6">
                         <div class="card">
@@ -147,19 +155,30 @@
                                 </ul> -->
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col">
-                              <a class="btn waves-effect waves-light btn-info hidden-md-down text-white" href="{% url 'dashboard:sale_pdf' %}">Download Report Pdf</a>
-                            </div>
-                            <div class="col">
-                              <a class="btn waves-effect waves-light btn-info hidden-md-down text-white" href="{% url 'dashboard:sale_csv' %}">Download Report Csv</a>
-                            </div>
-                            
-
-                            
+                      </form>
+                        <hr>
+                        <div class="row justify-content-center">
+                          <h4 class="text-center">Download Reports</h4>
+                            <form action="{% url 'dashboard:sale_pdf' %}" method="post">
+                              {% csrf_token %}
+                              <p>From:<input type="date" name="fromdate"/>
+                              To:<input type="date" name="todate"/>
+                              <input class="btn btn-info text-white" type="submit" value="Download Pdf"/></p>
+                            </form>                          
                         </div>
+                        <br>
+                        <div class="row justify-content-center">
+                            <form action="{% url 'dashboard:sale_csv' %}" method="post">
+                              {% csrf_token %}
+                              <p>From:<input type="date" name="fromdate"/>
+                              To:<input type="date" name="todate"/>
+                              <input class="btn btn-info text-white" type="submit" value="Download CSV"/></p>
+                            </form>
+                        </div>
+                        <hr>
                     </div>
-                </div>
+                        
+              </div>
                 
                
 

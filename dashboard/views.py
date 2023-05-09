@@ -21,7 +21,24 @@ import csv
 from django.http import HttpResponse, response
 from django.utils import timezone
 from orders.render import Render
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import user_passes_test
+import datetime
+from django.utils.timezone import make_aware
 # Create your views here.
+
+def superuser_login_required(view_func=None, login_url=None, redirect_field_name=None, *args, **kwargs):
+    """
+    Decorator for views that checks that the user is a superuser and is authenticated,
+    or redirects to the login page.
+    """
+    decorator = [login_required(login_url=login_url, redirect_field_name=redirect_field_name)]
+    decorator.append(user_passes_test(lambda u: u.is_superuser, login_url=login_url, redirect_field_name=redirect_field_name))
+
+    def inner_decorator(view_func):
+        return decorator[0](decorator[1](view_func))
+    return inner_decorator(view_func) if view_func else inner_decorator
+
 
 class SuperuserRequiredMixin(UserPassesTestMixin):
     def test_func(self):
@@ -38,18 +55,43 @@ class AdminLogin(LoginView):
     def get_success_url(self):
         return reverse_lazy('dashboard:dash')
 
-class DashBoard(SuperuserRequiredMixin, LoginRequiredMixin, TemplateView):
-    template_name = 'dashboard/dash.html'
+# class DashBoard(SuperuserRequiredMixin, LoginRequiredMixin, TemplateView):
+#     template_name = 'dashboard/dash.html'
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        orders = Order.objects.exclude(payment__isnull=True).order_by('-updated_at')
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         orders = Order.objects.exclude(payment__isnull=True).order_by('-updated_at')
+#         status_count = Order.objects.values('status').annotate(status_count=Count('status')).distinct()
+#         variants_with_stock = ProductVariant.objects.values( 'product__name', 'size__name', 'price', 'stock')
+#         context['orders'] = orders    # add them to the context dictionary
+#         context['variants'] = variants_with_stock
+#         context['status_counts'] = status_count
+#         return context
+
+@superuser_login_required
+def dashboard(request):
+    if request.method=='POST':
+        from_date = request.POST.get('fromdate')
+        to_date = request.POST.get('todate')
+        search_result = Order.objects.filter(created_at__range=[from_date, to_date]).exclude(payment__isnull=True).order_by('-created_at')
+        variants_with_stock = ProductVariant.objects.values( 'product__name', 'size__name', 'price', 'stock')
+        status_count = Order.objects.filter(created_at__range=[from_date, to_date]).values('status').annotate(status_count=Count('status')).distinct()
+        context = {
+            'orders': search_result,
+            'variants': variants_with_stock,
+            'status_counts': status_count,
+        }
+        return render(request, 'dashboard/dash.html', context)
+    else:
+        orders = Order.objects.exclude(payment__isnull=True).order_by('-created_at')
         status_count = Order.objects.values('status').annotate(status_count=Count('status')).distinct()
         variants_with_stock = ProductVariant.objects.values( 'product__name', 'size__name', 'price', 'stock')
-        context['orders'] = orders    # add them to the context dictionary
-        context['variants'] = variants_with_stock
-        context['status_counts'] = status_count
-        return context
+        context = {
+                'orders': orders,
+                'variants': variants_with_stock,
+                'status_counts': status_count,
+            }
+        return render(request, 'dashboard/dash.html', context)
 
 class Pdf(SuperuserRequiredMixin, LoginRequiredMixin, View):
 
@@ -62,17 +104,44 @@ class Pdf(SuperuserRequiredMixin, LoginRequiredMixin, View):
             'request': request,
         }
         return Render.render('dashboard/pdf.html', context)
+    
+    def post(self, request):
+        fromdate = request.POST.get('fromdate')
+        todate = request.POST.get('todate')
+        from_datetime = datetime.datetime.strptime(fromdate, "%Y-%m-%d")
+        to_datetime = datetime.datetime.strptime(todate, "%Y-%m-%d")
+        from_datetime_aware = make_aware(from_datetime)
+        to_datetime_aware = make_aware(to_datetime)
+        orders = Order.objects.exclude(payment__isnull=True).filter(updated_at__range=[from_datetime_aware, to_datetime_aware]).order_by('-updated_at')
+        today = timezone.now()
+        context = {
+            'today': today,
+            'orders': orders,
+            'request': request,
+        }
+        return Render.render('dashboard/pdf.html', context)
 
 class Csv(SuperuserRequiredMixin, LoginRequiredMixin, View):
 
-    def get(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         response = HttpResponse(content_type='text/csv')
         response['Content-Disposition'] = 'attachment; filename=order.csv'
 
         # Create CSV writer
         writer = csv.writer(response)
 
+        # Get the date range from the POST data
+        from_date_str = request.POST.get('fromdate', None)
+        to_date_str = request.POST.get('todate', None)
+        from_date = timezone.make_aware(datetime.datetime.strptime(from_date_str, '%Y-%m-%d')) if from_date_str else None
+        to_date = timezone.make_aware(datetime.datetime.strptime(to_date_str, '%Y-%m-%d')) if to_date_str else None
+
+        # Filter orders by date range
         orders = Order.objects.exclude(payment__isnull=True).order_by('-updated_at')
+        if from_date:
+            orders = orders.filter(updated_at__gte=from_date)
+        if to_date:
+            orders = orders.filter(updated_at__lte=to_date)
 
         # Add columns
         writer.writerow(['User', 'Billing Name', 'Order ID', 'Payment ID', 'Coupon', 'Discount', 'Total', 'Status'])
@@ -109,14 +178,22 @@ class CouponDelete(SuperuserRequiredMixin, LoginRequiredMixin, DeleteView):
     template_name = 'dashboard/coupon_delete.html'
     success_url = reverse_lazy('dashboard:coupons')
 
-class OrderList(SuperuserRequiredMixin, LoginRequiredMixin, ListView):
-    model = Order
-    context_object_name = 'orders'
-    template_name = 'dashboard/order_list.html'    
-
-    def get_queryset(self):
-        # exclude orders with None payment value
-        return super().get_queryset().exclude(payment__isnull=True).order_by('-created_at')
+@superuser_login_required
+def order_list(request):
+    if request.method=='POST':
+        from_date = request.POST.get('fromdate')
+        to_date = request.POST.get('todate')
+        search_result = Order.objects.filter(created_at__range=[from_date, to_date]).exclude(payment__isnull=True).order_by('-created_at')
+        context = {
+            'orders': search_result,
+        }
+        return render(request, 'dashboard/order_list.html', context)
+    else:
+        orders = Order.objects.exclude(payment__isnull=True).order_by('-created_at')
+        context = {
+                'orders': orders,
+            }
+        return render(request, 'dashboard/order_list.html', context)
 
 class OrderDetail(SuperuserRequiredMixin, LoginRequiredMixin, DetailView):
     model = Order

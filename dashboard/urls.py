@@ -1,18 +1,18 @@
 from django.urls import path
-from .views import DashBoard, ProductList, CustomerList, ProductCreate, ProductUpdate, ProductDelete, AdminLogin
+from .views import ProductList, CustomerList, ProductCreate, ProductUpdate, ProductDelete, AdminLogin
 from .views import VariantList, VariantCreate, VariantUpdate, VariantDelete, CategoryList, CategoryCreate, CategoryUpdate, CategoryDelete
-from .views import SizeList, SizeCreate, SizeUpdate, SizeDelete, OrderList, OrderDetail, OrderUpdate, CouponList, CouponCreate, CouponUpdate, CouponDelete
+from .views import SizeList, SizeCreate, SizeUpdate, SizeDelete, OrderDetail, OrderUpdate, CouponList, CouponCreate, CouponUpdate, CouponDelete
 from . import views
 from django.contrib.auth.views import LogoutView
 
 app_name = 'dashboard'
 
 urlpatterns = [
-    path('', DashBoard.as_view(), name='dash'),
+    path('', views.dashboard, name='dash'),
     path('admin_login/', AdminLogin.as_view(), name='admin_login'),
     path('logout/', LogoutView.as_view(next_page='dashboard:admin_login'), name='logout'),
     path('variants/', VariantList.as_view(), name='variants'),
-    path('order/', OrderList.as_view(), name='orders'),
+    path('order/', views.order_list, name='orders'),
     path('coupon/', CouponList.as_view(), name='coupons'),
     path('coupon-add/', CouponCreate.as_view(), name='coupon_add'),
     path('coupon-update/<int:pk>/', CouponUpdate.as_view(), name='coupon_update'),
